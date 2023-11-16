@@ -52,7 +52,7 @@ app.get("/notes/:noteName", (req, res) => {
     const filePath = path.join(__dirname, "notes.json");
     fs.access(filePath, fs.constants.F_OK, (err) => {
       if (err) {
-        res.status(404).send("Файл не знайдено");
+        res.status(404).send('404: Нотатки не існує');
       } else {
         const notesData = fs.readFileSync(filePath, "utf8");
         const notes = JSON.parse(notesData);
@@ -62,7 +62,7 @@ app.get("/notes/:noteName", (req, res) => {
           res.status(200).send(textFromNote);
         } else {
           // Якщо нотатка з вказаним ім'ям не знайдена, вивести помилку 404
-          res.status(404).send("Файл не знайдено");
+          res.status(404).send('404: Нотатки з таким іменем не існує');
         }
       }
     });
