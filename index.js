@@ -47,25 +47,18 @@ app.post('/upload', upload.none(), (req, res) => {
     }
 });
 
-app.get("/notes/:noteName", (req, res) => {
-    const noteName = req.params.noteName;
-    const filePath = path.join(__dirname, "notes.json");
-    fs.access(filePath, fs.constants.F_OK, (err) => {
-      if (err) {
-        res.status(404).send('404: Нотатки не існує');
-      } else {
-        const notesData = fs.readFileSync(filePath, "utf8");
-        const notes = JSON.parse(notesData);
-        const foundNote = notes.find((note) => note.note_name === noteName);
-        if (foundNote) {
-          const textFromNote = foundNote.note_text.toString();
-          res.status(200).send(textFromNote);
-        } else {
-          // Якщо нотатка з вказаним ім'ям не знайдена, вивести помилку 404
-          res.status(404).send('404: Нотатки з таким іменем не існує');
-        }
-      }
-    });
+app.get('/notes/:noteName', (req, res) => {
+  const noteName = req.params.noteName;
+  const note = JSON.parse(fs.readFileSync(notesFilePath, 'utf8')); 
+  
+  const foundNote = note.find((data) => data.note_name === noteName);
+
+  if (foundNote) {
+      const textFromNote = foundNote.note_text.toString();
+      res.status(200).send(textFromNote);
+  } else {
+      res.status(404).send("404: Нотатки з таким іменем не існує.");
+  }
   });
 
 app.put('/notes/:noteName', express.text(), (req, res) => {
